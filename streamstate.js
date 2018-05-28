@@ -12,11 +12,11 @@ class StreamState {
 
 	track(stream, options) {
 		options.error = options.error || noop;
-		let pendingEvents = Promise.resolve();
 		const streamPromise = new Promise((resolve, reject) => {
+			let pendingEvents = Promise.resolve();
 			stream.on('error', err => {
-				const handled = new Promise((res, rej) => {
-					if (options.error) {
+				if (options.error) {
+					const handled = new Promise((res, rej) => {
 						Promise.resolve(options.error(err)).then(
 							newerr => {
 								if (newerr) rej(newerr);
@@ -24,22 +24,24 @@ class StreamState {
 							},
 							rej
 						);
-					}
-					else {
-						rej(err);
-					}
-				});
-				handled.catch(reject);
-				pendingEvents = pendingEvents.then(() => handled);
+					});
+					handled.catch(reject);
+					pendingEvents = pendingEvents.then(() => handled);
+				}
+				else {
+					reject(err);
+				}
 			});
 			stream.on('finish', () => {
 				pendingEvents.then(() => {
-					resolve(new Promise(res => {
-						if (options.finish)
+					if (options.finish) {
+						resolve(new Promise(res => {
 							res(options.finish(stream)));
-						else
-							res();
-					});
+						});
+					}
+					else {
+						resolve();
+					}
 				});
 			});
 		});
