@@ -1,20 +1,17 @@
 
-class StreamState {
-	constructor() {
-		this._resolve = null;
-		this._reject = null;
-		this.pending = 0;
-		this.result = new Promise((resolve, reject) => {
-			this._resolve = resolve;
-			this._reject = reject;
-		});
+export class StreamWatcher {
+	constructor(stream) {
+		this.finish = Promise.resolve();
+		if (stream) {
+			this.track(stream);
+		}
 	}
 
-	track(stream, options) {
-		options.error = options.error || noop;
+	watch(stream, options) {
+		options = options || {};
 		const streamPromise = new Promise((resolve, reject) => {
 			let pendingEvents = Promise.resolve();
-			stream.on('error', err => {
+			stream.on("error", err => {
 				if (options.error) {
 					const handled = new Promise((res, rej) => {
 						Promise.resolve(options.error(err)).then(
@@ -32,12 +29,12 @@ class StreamState {
 					reject(err);
 				}
 			});
-			stream.on('finish', () => {
+			stream.on("finish", () => {
 				pendingEvents.then(() => {
 					if (options.finish) {
 						resolve(new Promise(res => {
-							res(options.finish(stream)));
-						});
+							res(options.finish(stream));
+						}));
 					}
 					else {
 						resolve();
@@ -46,20 +43,9 @@ class StreamState {
 			});
 		});
 
-		this._pending += 1;
-		streamPromise.then(
-			value => {
-				this._pending -= 1;
-				if (options.final)
-					this._value = value;
-				if (!this._pending)
-					this._resolve(this._value);
-			},
-			err => {
-				this._reject(err);
-			}
-		);
-
+		this.finish = Promise.all([this.finish, streamPromise]);
 		return streamPromise;
 	}
 }
+
+export { StreamWatcher as default };
