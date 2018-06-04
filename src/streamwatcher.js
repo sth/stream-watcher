@@ -10,7 +10,7 @@ export class StreamWatcher {
 	watch(stream, options) {
 		options = options || {};
 		const streamPromise = new Promise((resolve, reject) => {
-			let pendingEvents = Promise.resolve();
+			let pendingEvents = [];
 			stream.on("error", err => {
 				if (options.error) {
 					const handled = new Promise((res, rej) => {
@@ -23,14 +23,14 @@ export class StreamWatcher {
 						);
 					});
 					handled.catch(reject);
-					pendingEvents = pendingEvents.then(() => handled);
+					pendingEvents.push(handled);
 				}
 				else {
 					reject(err);
 				}
 			});
 			stream.on("finish", () => {
-				pendingEvents.then(() => {
+				Promise.all(pendingEvents).then(() => {
 					if (options.finish) {
 						resolve(new Promise(res => {
 							res(options.finish(stream));

@@ -6,7 +6,7 @@ import assert from 'assert';
 import stream from 'stream';
 
 class NullWritable extends stream.Writable {
-	_write() {}
+	_write(c, e, cb) { cb(); }
 };
 
 async function assertFulfill(p) {
@@ -92,9 +92,6 @@ describe("single stream with {error: ...}", function() {
 	});
 });
 
-describe("pipe", function() {
-});
-
 describe("something", function() {
 	beforeEach(function() {
 		this.watcher = new StreamWatcher();
@@ -113,7 +110,7 @@ describe("something", function() {
 		await assertFulfill(this.watcher.finish);
 	});
 
-	it.skip("fulfills on completed pipe with multiple targets", async function() {
+	it("fulfills on completed pipe with multiple targets", async function() {
 		this.dest2 = new NullWritable();
 		this.src.pipe(this.dest2);
 
