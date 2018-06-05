@@ -47,7 +47,7 @@ describe("watcher with no streams", function() {
 	});
 
 	it("fulfills", async function() {
-		await assertFulfill(this.watcher.finished);
+		await assertFulfill(this.watcher.finish);
 	});
 });
 
@@ -73,7 +73,7 @@ describe("watcher with single stream", function() {
 		this.src.write("abc");
 		this.src.end("def");
 
-		await assertFulfill(this.watcher.finished);
+		await assertFulfill(this.watcher.finish);
 	});
 
 	it("rejects on stream error", async function() {
@@ -113,11 +113,11 @@ describe("single stream with {error: ...}", function() {
 		this.src.emit("error", "E");
 		this.src.end("def");
 
-		await assertFulfill(this.watcher.finished);
+		await assertFulfill(this.watcher.finish);
 	});
 });
 
-describe("something", function() {
+describe("watcher for two piped streams", function() {
 	beforeEach(function() {
 		this.watcher = new StreamWatcher();
 		this.src = through();
@@ -126,8 +126,6 @@ describe("something", function() {
 		this.watcher.watch(this.src);
 		this.watcher.watch(this.dest);
 	});
-
-	//it("fulfills on completd tracks stream"
 
 	it("fulfills on completed pipe", async function() {
 		this.src.end("abc");
@@ -156,7 +154,7 @@ describe("something", function() {
 		assert.equal(err, "b");
 	});
 
-	it("rejects on error in pipe destination", async function() {
+	it("rejects on successful source and error in pipe destination", async function() {
 		this.src.write("abc");
 		this.dest.emit("error", "b");
 		this.src.end("def");
