@@ -1,6 +1,5 @@
 
 import StreamWatcher from "../src/streamwatcher";
-import through from 'through2';
 
 import assert from 'assert';
 import stream from 'stream';
@@ -65,7 +64,7 @@ it("watcher with readable stream fulfills on end of stream", async function() {
 describe("watcher with single stream", function() {
 	beforeEach(function() {
 		this.watcher = new StreamWatcher();
-		this.src = through();
+		this.src = new stream.PassThrough();
 		this.watcher.watch(this.src);
 	});
 
@@ -86,10 +85,10 @@ describe("watcher with single stream", function() {
 });
 
 
-describe("single stream with {error: ...}", function() {
+describe("watcher with {error: ...}", function() {
 	beforeEach(function() {
 		this.watcher = new StreamWatcher();
-		this.src = through();
+		this.src = new stream.PassThrough();
 	});
 
 	it("rejects with modified error", async function() {
@@ -120,7 +119,7 @@ describe("single stream with {error: ...}", function() {
 describe("watcher for two piped streams", function() {
 	beforeEach(function() {
 		this.watcher = new StreamWatcher();
-		this.src = through();
+		this.src = new stream.PassThrough();
 		this.dest = new NullWritable();
 		this.src.pipe(this.dest);
 		this.watcher.watch(this.src);
