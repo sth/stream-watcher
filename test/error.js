@@ -161,3 +161,24 @@ describe("watcher for two piped streams", function() {
 		assert.equal(err, "b");
 	});
 });
+
+it("watcher only resolves after all streams are finished", async function() {
+	this.src1 = new stream.PassThrough();
+	this.src2 = new stream.PassThrough();
+	this.watcher = new StreamWatcher();
+	this.watcher.watch(this.src1);
+	this.watcher.watch(this.src2);
+
+	this.src1.end("s1");
+
+	let done = false;
+
+	setTimeout(() => {
+		assert.ok(!done);
+		this.src2.end("s2");
+	}, 100);
+
+	await this.watcher.finish;
+	done = true;
+	assert.ok(true);
+});
