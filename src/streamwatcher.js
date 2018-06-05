@@ -41,6 +41,18 @@ export class StreamWatcher {
 					}
 				});
 			});
+			stream.on("end", () => {
+				Promise.all(pendingEvents).then(() => {
+					if (options.finish) {
+						resolve(new Promise(res => {
+							res(options.finish(stream));
+						}));
+					}
+					else {
+						resolve();
+					}
+				});
+			});
 		});
 
 		this.finish = Promise.all([this.finish, streamPromise]);
