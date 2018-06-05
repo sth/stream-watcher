@@ -5,6 +5,20 @@ import through from 'through2';
 import assert from 'assert';
 import stream from 'stream';
 
+class ChunkReader extends stream.Readable {
+	constructor(chunks) {
+		super();
+		this.chunks = chunks;
+	}
+	_read(size) {
+		while (this.chunks.length) {
+			if (!this.push(this.chunks.shift()))
+				return;
+		}
+		this.push(null);
+	}
+};
+
 class NullWritable extends stream.Writable {
 	_write(c, e, cb) { cb(); }
 };
@@ -35,6 +49,17 @@ describe("watcher with no streams", function() {
 	it("fulfills", async function() {
 		await assertFulfill(this.watcher.finished);
 	});
+});
+
+
+it("watcher with readable stream fulfills on end of stream", async function() {
+	this.watcher = new StreamWatcher();
+	this.src = new ChunkReader(["abc", "def"]);
+	this.watcher.watch(this.src);
+	while (this.src.read() !== null)
+		;
+	await assertFulfill(this.watcher.finish);
+	assert.ok(true);
 });
 
 describe("watcher with single stream", function() {
