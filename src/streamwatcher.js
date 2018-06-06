@@ -56,6 +56,13 @@ export class StreamWatcher {
 		});
 
 		this.finish = Promise.all([this.finish, streamPromise]);
+
+		// We don't want to force the user to wait for `this.finish`, since
+		// the `streamPromise` we return here might be everything they want.
+		// Therefore we add an empty catch() to make sure the promise doesn't
+		// end up as an unhandled exception.
+		this.finish.catch(() => {});
+
 		return streamPromise;
 	}
 }
