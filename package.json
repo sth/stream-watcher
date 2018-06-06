@@ -4,19 +4,19 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint src/ test/",
-    "test": "mocha --require babel-polyfill --require babel-register",
+    "test": "ava",
     "build": "babel src --out-dir lib",
     "prepublish": "npm run build"
   },
   "author": "Stephan Hohe <sth.dev@tejp.de>",
   "license": "MIT",
   "devDependencies": {
+    "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "eslint": "^4.19.1",
-    "mocha": "^5.2.0"
+    "eslint": "^4.19.1"
   },
   "dependencies": {}
 }
