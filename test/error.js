@@ -63,7 +63,7 @@ test("watcher without streams fulfills", async t => {
 test("stays pending for readable stream while stream isn't read", async t => {
 	const watcher = new StreamWatcher();
 	const src = new ChunkReader(["abc", "def"]);
-	
+
 	const psrc = watcher.watch(src);
 
 	// As long as `src` isn't read stream/watcher shouldn't finish
@@ -74,7 +74,7 @@ test("stays pending for readable stream while stream isn't read", async t => {
 test("fulfills for readable stream when stream ends", async t => {
 	const watcher = new StreamWatcher();
 	const src = new ChunkReader(["abc", "def"]);
-	
+
 	const psrc = watcher.watch(src);
 
 	// Read whole stream by piping it to a writer
@@ -87,7 +87,7 @@ test("fulfills for readable stream when stream ends", async t => {
 test("rejects for readable stream when error occurs", async t => {
 	const watcher = new StreamWatcher();
 	const src = new ChunkReader(["abc", s => s.emit("error", new Error("E"))]);
-	
+
 	const psrc = watcher.watch(src);
 
 	// Read whole stream by piping it to a writer
@@ -103,7 +103,7 @@ test("rejects for readable stream when error occurs", async t => {
 test("stays pending for writable stream while stream isn't complete", async t => {
 	const watcher = new StreamWatcher();
 	const dest = new NullWriter();
-	
+
 	const pdest = watcher.watch(dest);
 
 	// As long as `src` isn't read stream/watcher shouldn't finish
@@ -114,7 +114,7 @@ test("stays pending for writable stream while stream isn't complete", async t =>
 test("fulfills for writable stream when stream finishes", async t => {
 	const watcher = new StreamWatcher();
 	const dest = new NullWriter();
-	
+
 	const pdest = watcher.watch(dest);
 
 	// Write to stream
@@ -128,7 +128,7 @@ test("fulfills for writable stream when stream finishes", async t => {
 test("rejects for writable stream when error occurs", async t => {
 	const watcher = new StreamWatcher();
 	const dest = new NullWriter();
-	
+
 	const pdest = watcher.watch(dest);
 
 	// Write to stream
@@ -168,6 +168,91 @@ test("watcher with {error: ...} doesn't reject with ignored error", async t => {
 	dest.end("def");
 
 	await t.notThrows(pdest);
+	await t.notThrows(watcher.finish);
+});
+
+test("{error: ...} supports async handler functions", async t => {
+	const watcher = new StreamWatcher();
+	const dest = new NullWriter();
+
+	const pdest = watcher.watch(dest, {
+		error: async (err) => {
+			t.is(err.message, "E");
+
+			await new Promise((resolve, reject) => {
+				setTimeout(resolve, 100);
+			});
+
+			return new Error("E2");
+		}
+	});
+
+	dest.emit('error', new Error("E"));
+
+	await t.throws(pdest, "E2");
+	await t.throws(watcher.finish, "E2");
+});
+
+test("{error: ...} handles exceptions in the handler function", async t => {
+	const watcher = new StreamWatcher();
+	const dest = new NullWriter();
+
+	const pdest = watcher.watch(dest, {
+		error(err) { throw new Error("H"); }
+	});
+
+	dest.emit('error', new Error("E"));
+
+	await t.throws(pdest, "H");
+	await t.throws(watcher.finish, "H");
+});
+
+test("the `finish` promise can be ignored even if rejected", async t => {
+	const watcher = new StreamWatcher();
+	const dest = new NullWriter();
+
+	const pdest = watcher.watch(dest);
+
+	dest.write("abc");
+	dest.emit('error', new Error("E"));
+
+	await t.throws(pdest);
+});
+
+test("the promise returned by watch() can be ignored even if rejected", async t => {
+	const watcher = new StreamWatcher();
+	const dest = new NullWriter();
+
+	const pdest = watcher.watch(dest);
+
+	dest.write("abc");
+	dest.emit('error', new Error("E"));
+
+	await t.throws(watcher.finish);
+});
+
+
+// multiple streams
+
+test("fulfills only after all streams are fulfilled", async t => {
+	const watcher = new StreamWatcher();
+	const dest1 = new NullWriter();
+	const dest2 = new NullWriter();
+
+	const pdest1 = watcher.watch(dest1);
+	const pdest2 = watcher.watch(dest2);
+
+	// originally pending
+	await t.notThrows(assert_pending(watcher.finish));
+
+	dest1.end();
+
+	// still pending
+	await t.notThrows(assert_pending(watcher.finish));
+
+	dest2.end();
+
+	// resolved now
 	await t.notThrows(watcher.finish);
 });
 
