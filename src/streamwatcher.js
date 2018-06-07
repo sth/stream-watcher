@@ -3,7 +3,7 @@ export class StreamWatcher {
 	constructor(stream) {
 		this.finish = Promise.resolve();
 		if (stream) {
-			this.track(stream);
+			this.watch(stream);
 		}
 	}
 
