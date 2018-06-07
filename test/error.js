@@ -1,15 +1,15 @@
-import test from 'ava';
+import test from "ava";
 
 import StreamWatcher from "../lib/streamwatcher";
 
-import stream from 'stream';
+import stream from "stream";
 
 class ChunkReader extends stream.Readable {
 	constructor(chunks) {
 		super();
 		this.chunks = chunks;
 	}
-	_read(size) {
+	_read(size_unused) {
 		while (this.chunks.length) {
 			const chunk = this.chunks.shift();
 			if (chunk instanceof Function) {
@@ -22,11 +22,11 @@ class ChunkReader extends stream.Readable {
 		}
 		this.push(null);
 	}
-};
+}
 
 class NullWriter extends stream.Writable {
 	_write(c, e, cb) { cb(); }
-};
+}
 
 
 function assert_pending(promise) {
@@ -160,7 +160,7 @@ test("watcher with {error: ...} doesn't reject with ignored error", async t => {
 	const dest = new NullWriter();
 
 	const pdest = watcher.watch(dest, {
-		error(err) { return; }
+		error(err_unused) { return; }
 	});
 
 	dest.write("abc");
@@ -179,7 +179,7 @@ test("{error: ...} supports async handler functions", async t => {
 		error: async (err) => {
 			t.is(err.message, "E");
 
-			await new Promise((resolve, reject) => {
+			await new Promise((resolve, reject_unused) => {
 				setTimeout(resolve, 100);
 			});
 
@@ -187,7 +187,7 @@ test("{error: ...} supports async handler functions", async t => {
 		}
 	});
 
-	dest.emit('error', new Error("E"));
+	dest.emit("error", new Error("E"));
 
 	await t.throws(pdest, "E2");
 	await t.throws(watcher.finish, "E2");
@@ -198,10 +198,10 @@ test("{error: ...} handles exceptions in the handler function", async t => {
 	const dest = new NullWriter();
 
 	const pdest = watcher.watch(dest, {
-		error(err) { throw new Error("H"); }
+		error(err_unused) { throw new Error("H"); }
 	});
 
-	dest.emit('error', new Error("E"));
+	dest.emit("error", new Error("E"));
 
 	await t.throws(pdest, "H");
 	await t.throws(watcher.finish, "H");
@@ -214,7 +214,7 @@ test("the `finish` promise can be ignored even if rejected", async t => {
 	const pdest = watcher.watch(dest);
 
 	dest.write("abc");
-	dest.emit('error', new Error("E"));
+	dest.emit("error", new Error("E"));
 
 	await t.throws(pdest);
 });
@@ -223,10 +223,10 @@ test("the promise returned by watch() can be ignored even if rejected", async t 
 	const watcher = new StreamWatcher();
 	const dest = new NullWriter();
 
-	const pdest = watcher.watch(dest);
+	const pdest = watcher.watch(dest); // eslint-disable-line no-unused-vars
 
 	dest.write("abc");
-	dest.emit('error', new Error("E"));
+	dest.emit("error", new Error("E"));
 
 	await t.throws(watcher.finish);
 });
@@ -244,11 +244,14 @@ test("fulfills only after all streams are fulfilled", async t => {
 
 	// originally pending
 	await t.notThrows(assert_pending(watcher.finish));
+	await t.notThrows(assert_pending(pdest1));
+	await t.notThrows(assert_pending(pdest2));
 
 	dest1.end();
 
 	// still pending
 	await t.notThrows(assert_pending(watcher.finish));
+	await t.notThrows(assert_pending(pdest2));
 
 	dest2.end();
 
