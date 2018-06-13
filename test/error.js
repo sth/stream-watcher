@@ -1,33 +1,9 @@
 import test from "ava";
 
-import StreamWatcher from "../lib/streamwatcher";
+import StreamWatcher from "../lib/watcher";
 
+import { ChunkReader, NullWriter } from 'testcase-streams';
 import stream from "stream";
-
-class ChunkReader extends stream.Readable {
-	constructor(chunks) {
-		super();
-		this.chunks = chunks;
-	}
-	_read(size_unused) {
-		while (this.chunks.length) {
-			const chunk = this.chunks.shift();
-			if (chunk instanceof Function) {
-				if (!chunk(this))
-					return;
-			}
-			else if (!this.push(chunk)) {
-				return;
-			}
-		}
-		this.push(null);
-	}
-}
-
-class NullWriter extends stream.Writable {
-	_write(c, e, cb) { cb(); }
-}
-
 
 function assert_pending(promise) {
 	return new Promise((resolve, reject) => {
