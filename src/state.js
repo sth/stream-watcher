@@ -1,8 +1,12 @@
 
 export class EventNotFound extends Error {
 	constructor() {
-		super("Stream ended without without encountering event");
+		super("Stream ended without encountering event");
 	}
+}
+
+function untracked(promise) {
+	promise.catch(err => {});
 }
 
 export class StreamState {
@@ -42,7 +46,17 @@ export class StreamState {
 
 		this.end = this.eventState("end");
 		this.finish = this.eventState("finish");
-		this.complete = Promise.ace([this.end, this.finish]);
+		this.complete = new Promise((resolve, reject) => {
+			this.stream.on('end', resolve);
+			this.stream.on('finish', resolve);
+			this._failureActions.error.push(reject);
+		});
+		this.close = this.eventState("close");
+
+		untracked(this.end);
+		untracked(this.finish);
+		untracked(this.complete);
+		untracked(this.close);
 	}
 
 	_triggerFailure(eventName, value) {
@@ -58,12 +72,8 @@ export class StreamState {
 		}
 	}
 
-	async eventState(eventName) {
+	eventState(eventName) {
 		return new Promise((resolve, reject) => {
-			if (this._rejected) {
-				reject(this._rejectError);
-				return;
-			}
 			this.stream.on(eventName, resolve);
 			if (eventName !== "error")
 				this._failureActions.error.push(reject);
@@ -75,3 +85,4 @@ export class StreamState {
 	}
 }
 
+export { StreamState as default };

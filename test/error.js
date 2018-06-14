@@ -1,20 +1,10 @@
 import test from "ava";
+import { ChunkReader, NullWriter } from 'testcase-streams';
+import { assert_pending } from './_helpers';
 
 import StreamWatcher from "../lib/watcher";
 
-import { ChunkReader, NullWriter } from 'testcase-streams';
 import stream from "stream";
-
-function assert_pending(promise) {
-	return new Promise((resolve, reject) => {
-		promise.then(
-			() => { reject(new Error("already fulfilled")); },
-			() => { reject(new Error("already rejected")); }
-		);
-		setTimeout(() => { resolve("still pending"); }, 200);
-	});
-}
-
 
 // helpers
 
@@ -44,7 +34,7 @@ test("stays pending for readable stream while stream isn't read", async t => {
 
 	// As long as `src` isn't read stream/watcher shouldn't finish
 	await t.notThrows(assert_pending(psrc), "stream still pending");
-	await t.notThrows(assert_pending(watcher.finish), "watcher stillp pending");
+	await t.notThrows(assert_pending(watcher.finish), "watcher still pending");
 });
 
 test("fulfills for readable stream when stream ends", async t => {
@@ -82,7 +72,7 @@ test("stays pending for writable stream while stream isn't complete", async t =>
 
 	const pdest = watcher.watch(dest);
 
-	// As long as `src` isn't read stream/watcher shouldn't finish
+	// As long as `dest` isn't written stream/watcher shouldn't finish
 	await t.notThrows(assert_pending(pdest), "stream still pending");
 	await t.notThrows(assert_pending(watcher.finish), "watcher still pending");
 });
