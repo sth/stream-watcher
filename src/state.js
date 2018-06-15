@@ -12,6 +12,7 @@ function untracked(promise) {
 class FailStates {
 	constructor() {
 		this._states = {};
+		this.order = [];
 	}
 	_state(name) {
 		if (!this._states[name]) {
@@ -36,6 +37,7 @@ class FailStates {
 			return;
 		st.triggered = true;
 		st.value = value;
+		this.order.push(name);
 		for (const action of st.actions) {
 			action(value);
 		}
@@ -90,12 +92,31 @@ export class StreamState {
 	eventState(eventName) {
 		return new Promise((resolve, reject) => {
 			this.stream.on(eventName, resolve);
+
+			// Collect events on which we fail
+			const failEvents = [];
 			if (eventName !== "error")
-				this._failures.on("error", reject);
+				failEvents.push("error");
 			if (eventName !== "end" && eventName !== "close")
-				this._failures.on("end", reject);
+				failEvents.push("end");
 			if (eventName !== "finish" && eventName !== "close")
-				this._failures.on("finish", reject);
+				failEvents.push("finish");
+
+			// Check for already triggered fail events.
+			// This ensures that we seen already triggered events in order
+			for (const name of this._failures.order) {
+				// Could use Array#includes() for Node >6
+				if (failEvents.some(elem => elem == name)) {
+					// This rejects immediately
+					this._failures.on(name, reject);
+					return;
+				}
+			}
+
+			// No existing failure conditions, register all handlers
+			for (const name of failEvents) {
+				this._failures.on(name, reject);
+			}
 		});
 	}
 }
