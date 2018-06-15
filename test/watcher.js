@@ -1,19 +1,10 @@
 import test from "ava";
+
 import { ChunkReader, NullWriter } from 'testcase-streams';
-import { assert_pending } from './_helpers';
-
-import StreamWatcher from "../lib/watcher";
-
+import { assert_pending } from './_helpers.js';
 import stream from "stream";
 
-// helpers
-
-test("assert_pending()", async t => {
-	await t.notThrows(assert_pending(new Promise(() => {})));
-	await t.throws(assert_pending(Promise.resolve()));
-	await t.throws(assert_pending(Promise.reject()));
-	//await t.throws(Promise.reject());
-});
+import StreamWatcher from "../lib/watcher.js";
 
 
 // no streams

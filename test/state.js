@@ -1,8 +1,9 @@
 import test from "ava";
-import { ChunkReader, NullWriter } from 'testcase-streams';
-import { assert_pending } from './_helpers';
 
-import { StreamState, EventNotFound } from "../lib/state";
+import { ChunkReader, NullWriter } from 'testcase-streams';
+import { assert_pending } from './_helpers.js';
+
+import { StreamState, EventNotFound } from "../lib/state.js";
 
 // readable streams
 
