@@ -8,14 +8,22 @@
     "build": "babel src --out-dir lib",
     "prepublish": "npm run build"
   },
+  "ava": {
+    "require": [
+      "@babel/polyfill"
+    ]
+  },
   "author": "Stephan Hohe <sth.dev@tejp.de>",
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.25.0",
+    "@tejp/testing-streams": "^0.0.11",
+    "ava": "^2.3.0",
     "babel-cli": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "eslint": "^4.19.1",
-    "testcase-streams": "^0.1.0"
+    "eslint": "^6.3.0"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0"
   }
 }
