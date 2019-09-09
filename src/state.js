@@ -103,9 +103,10 @@ export class StreamState {
 				failEvents.push("finish");
 
 			// Check for already triggered fail events.
-			// This ensures that we seen already triggered events in order
+			// This ensures that we see already triggered events in order
 			for (const name of this._failures.order) {
 				// Could use Array#includes() for Node >6
+				// failEvents is <= 3 elements, so iterating over it is not expensive
 				if (failEvents.some(elem => elem == name)) {
 					// This rejects immediately
 					this._failures.on(name, reject);
