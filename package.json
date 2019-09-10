@@ -16,14 +16,14 @@
   "author": "Stephan Hohe <sth.dev@tejp.de>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
     "@tejp/testing-streams": "^0.0.11",
     "ava": "^2.3.0",
-    "babel-cli": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "eslint": "^6.3.0"
   },
   "dependencies": {
+    "@babel/core": "^7.6.0",
     "@babel/polyfill": "^7.6.0"
   }
 }
