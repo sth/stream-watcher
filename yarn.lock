@@ -732,10 +732,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tejp/testing-streams@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@tejp/testing-streams/-/testing-streams-0.0.11.tgz#274432d2cb608d9d3dfb18c832fccfdaaa54d437"
-  integrity sha512-DsHGOS1ild5iKhmeKj4bcbGeMUYbh4IN77b1/JCT4TmdiUmxdKXXBNV/ao0kcia3U4IK6Nynoc1khVt90R1Asg==
+"@tejp/testing-streams@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@tejp/testing-streams/-/testing-streams-0.0.12.tgz#8f6925a4974ecd65e7726e8b939f6b4433d19839"
+  integrity sha512-76uQhrcQZ77JjxH9OsV3LpKXIk0rXj6Jlh7mWA4j+de1/uvIQJLSEq96h4KmGajm7/JpVeux3ctwEjJpaywZbw==
 
 "@types/events@*":
   version "3.0.0"
