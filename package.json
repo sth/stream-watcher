@@ -20,9 +20,9 @@
     "@babel/core": "^7.6.0",
     "@babel/polyfill": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
-    "@tejp/testing-streams": "^0.0.12",
+    "@tejp/testing-streams": "^0.1.0",
     "ava": "^2.3.0",
-    "eslint": "^6.3.0"
+    "eslint": "^7.17.0"
   },
   "dependencies": {}
 }

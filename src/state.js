@@ -6,7 +6,7 @@ export class EventNotFound extends Error {
 }
 
 function untracked(promise) {
-	promise.catch(err => {});
+	promise.catch(err_unused => {});
 }
 
 class FailStates {
