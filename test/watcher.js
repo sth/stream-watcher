@@ -175,7 +175,7 @@ test("the `finish` promise can be ignored even if rejected", async t => {
 	dest.write("abc");
 	dest.emit("error", new Error("E"));
 
-	await t.throwsAsync(pdest.complete);
+	await t.throwsAsync(pdest.complete, {message: "E"});
 });
 
 test("the promise returned by watch() can be ignored even if rejected", async t => {
@@ -187,7 +187,7 @@ test("the promise returned by watch() can be ignored even if rejected", async t 
 	dest.write("abc");
 	dest.emit("error", new Error("E"));
 
-	await t.throwsAsync(watcher.finish);
+	await t.throwsAsync(watcher.finish, {message: "E"});
 });
 
 

@@ -19,9 +19,8 @@ test("filfills for readable stream when stream ends", async t => {
 	src.pipe(new NullWriter());
 
 	await t.notThrowsAsync(st.complete, "complete without error");
-	await t.throwsAsync(st.finish);
+	await t.throwsAsync(st.finish, {instanceOf: EventNotFound}, "there finish won't happen");
 	await t.notThrowsAsync(st.end, "end without error");
-	//await t.throwsAsync(st.finish, {instanceOf: EventNotFound}, "there finish won't happen");
 });
 
 test("rejects for readable stream when error occurs", async t => {
@@ -59,8 +58,7 @@ test("fulfills for writable stream when stream finishes", async t => {
 
 	await t.notThrowsAsync(st.complete, "complete without error");
 	await t.notThrowsAsync(st.finish, "finish without error");
-	await t.throwsAsync(st.end);
-	//await t.throwsAsync(st.end, {instanceOf: EventNotFound}, "end not found");
+	await t.throwsAsync(st.end, {instanceOf: EventNotFound}, "end not found");
 });
 
 test("rejects for writable stream when error occurs", async t => {
