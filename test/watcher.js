@@ -50,8 +50,8 @@ test("rejects for readable stream when error occurs", async t => {
 	// Read whole stream by piping it to a writer
 	src.pipe(new NullWriter());
 
-	await t.throwsAsync(psrc.complete, "E", "stream finished with error");
-	await t.throwsAsync(watcher.finish, "E", "watcher finished with error");
+	await t.throwsAsync(psrc.complete, {message: "E"}, "stream finished with error");
+	await t.throwsAsync(watcher.finish, {message: "E"}, "watcher finished with error");
 });
 
 
@@ -93,8 +93,8 @@ test("rejects for writable stream when error occurs", async t => {
 	dest.emit("error", new Error("E"));
 	dest.end("def");
 
-	await t.throwsAsync(pdest.complete, "E", "stream finished with error");
-	await t.throwsAsync(watcher.finish, "E", "watcher finished with error");
+	await t.throwsAsync(pdest.complete, {message: "E"}, "stream finished with error");
+	await t.throwsAsync(watcher.finish, {message: "E"}, "watcher finished with error");
 });
 
 test("watcher with {error: ...} rejects with modified error", async t => {
@@ -108,8 +108,8 @@ test("watcher with {error: ...} rejects with modified error", async t => {
 	dest.write("abc");
 	dest.emit("error", new Error("E"));
 
-	await t.throwsAsync(pdest.complete, "E-custom");
-	await t.throwsAsync(watcher.finish, "E-custom");
+	await t.throwsAsync(pdest.complete, {message: "E-custom"});
+	await t.throwsAsync(watcher.finish, {message: "E-custom"});
 });
 
 test("watcher with {error: ...} doesn't reject with ignored error", async t => {
@@ -162,8 +162,8 @@ test("{error: ...} handles exceptions in the handler function", async t => {
 
 	dest.emit("error", new Error("E"));
 
-	await t.throwsAsync(pdest.complete, "H");
-	await t.throwsAsync(watcher.finish, "H");
+	await t.throwsAsync(pdest.complete, {message: "H"});
+	await t.throwsAsync(watcher.finish, {message: "H"});
 });
 
 test("the `finish` promise can be ignored even if rejected", async t => {
@@ -268,9 +268,9 @@ test("rejects on error in pipe source", async t => {
 	src.write("abc");
 	src.emit("error", new Error("E"));
 
-	await t.throwsAsync(psrc.complete, "E");
+	await t.throwsAsync(psrc.complete, {message: "E"});
 	await t.notThrowsAsync(assert_pending(pdest.complete));
-	await t.throwsAsync(watcher.finish, "E");
+	await t.throwsAsync(watcher.finish, {message: "E"});
 });
 
 test("rejects on error in pipe destination", async t => {
@@ -286,12 +286,12 @@ test("rejects on error in pipe destination", async t => {
 	dest.emit("error", new Error("E"));
 
 	await t.notThrowsAsync(assert_pending(psrc.complete));
-	await t.throwsAsync(pdest.complete, "E");
-	await t.throwsAsync(watcher.finish, "E");
+	await t.throwsAsync(pdest.complete, {message: "E"});
+	await t.throwsAsync(watcher.finish, {message: "E"});
 
 	src.end("def");
 
 	await t.notThrowsAsync(psrc.complete);
-	await t.throwsAsync(pdest.complete, "E");
-	await t.throwsAsync(watcher.finish, "E");
+	await t.throwsAsync(pdest.complete, {message: "E"});
+	await t.throwsAsync(watcher.finish, {message: "E"});
 });

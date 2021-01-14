@@ -31,9 +31,9 @@ test("rejects for readable stream when error occurs", async t => {
 	// Read whole stream by piping it to a writer
 	src.pipe(new NullWriter());
 
-	await t.throwsAsync(st.complete, "E", "complete with error");
-	await t.throwsAsync(st.end, "E", "end with error");
-	await t.throwsAsync(st.finish, "E", "finish failed");
+	await t.throwsAsync(st.complete, {message: "E"}, "complete with error");
+	await t.throwsAsync(st.end, {message: "E"}, "end with error");
+	await t.throwsAsync(st.finish, {message: "E"}, "finish failed");
 });
 
 
@@ -72,7 +72,7 @@ test("rejects for writable stream when error occurs", async t => {
 	dest.emit("error", new Error("E"));
 	dest.end("def");
 
-	await t.throwsAsync(st.complete, "E", "complete with error");
-	await t.throwsAsync(st.finish, "E", "finish with error");
-	await t.throwsAsync(st.end, "E", "end failed");
+	await t.throwsAsync(st.complete, {message: "E"}, "complete with error");
+	await t.throwsAsync(st.finish, {message: "E"}, "finish with error");
+	await t.throwsAsync(st.end, {message: "E"}, "end failed");
 });

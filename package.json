@@ -9,20 +9,23 @@
     "prepublishOnly": "npm run build"
   },
   "ava": {
+    "babel": true,
     "require": [
-      "@babel/polyfill"
+      "esm"
     ]
   },
   "author": "Stephan Hohe <sth.dev@tejp.de>",
   "license": "MIT",
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
     "@babel/cli": "^7.6.0",
     "@babel/core": "^7.6.0",
     "@babel/polyfill": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@tejp/testing-streams": "^0.1.0",
-    "ava": "^2.3.0",
-    "eslint": "^7.17.0"
+    "ava": "^3.0.0",
+    "eslint": "^7.17.0",
+    "esm": "^3.2.25"
   },
   "dependencies": {}
 }

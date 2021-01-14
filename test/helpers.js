@@ -1,5 +1,5 @@
 import test from "ava";
-import { assert_pending } from './_helpers.js';
+import { assert_pending } from './_helpers';
 
 
 test("assert_pending()", async t => {
