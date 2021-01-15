@@ -1,6 +1,6 @@
 {
   "name": "stream-watcher",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src/ test/",
