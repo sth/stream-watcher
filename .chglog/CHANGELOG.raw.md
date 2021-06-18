@@ -1,8 +1,19 @@
 # Changelog
 
-<a name="master"></a>
-## [master](https://github.com/sth/stream-watcher/tree/master), ([compare to v0.3.0](https://github.com/sth/stream-watcher/compare/v0.3.0...master))
+<a name="v0.3.1"></a>
+## [v0.3.1](https://github.com/sth/stream-watcher/tree/v0.3.1), 2021-06-18 ([compare to v0.3.0](https://github.com/sth/stream-watcher/compare/v0.3.0...v0.3.1))
 
+* Update dependencies ([44e670d](https://github.com/sth/stream-watcher/commit/44e670de6e2cbfe0e6e9a710cfb67bc19307f5cb))
+* Merge pull request [#8](https://github.com/sth/stream-watcher/issues/8) from sth/dependabot/npm_and_yarn/normalize-url-4.5.1 ([553bf7c](https://github.com/sth/stream-watcher/commit/553bf7c829e79af74dae28285563b4a56b098fb2))
+* Bump normalize-url from 4.5.0 to 4.5.1 ([ff6d33d](https://github.com/sth/stream-watcher/commit/ff6d33d675fdd6c44bb972fc32f105367288277c))
+* Merge pull request [#7](https://github.com/sth/stream-watcher/issues/7) from sth/dependabot/npm_and_yarn/browserslist-4.16.6 ([1889c3b](https://github.com/sth/stream-watcher/commit/1889c3b5451786f05952deb09280aa132c50dc7e))
+* Bump browserslist from 4.16.1 to 4.16.6 ([15d6f8b](https://github.com/sth/stream-watcher/commit/15d6f8bdb45e625b3943c947f8685f2dd2bee3dd))
+* Merge pull request [#6](https://github.com/sth/stream-watcher/issues/6) from sth/dependabot/npm_and_yarn/hosted-git-info-2.8.9 ([cb9a333](https://github.com/sth/stream-watcher/commit/cb9a333824f08e203529cb65d6640815e83b2c45))
+* Merge pull request [#5](https://github.com/sth/stream-watcher/issues/5) from sth/dependabot/npm_and_yarn/lodash-4.17.21 ([7dc1e11](https://github.com/sth/stream-watcher/commit/7dc1e115b160baf92f5f48d2e5af5625bca187d6))
+* Bump hosted-git-info from 2.8.8 to 2.8.9 ([9bc6b4b](https://github.com/sth/stream-watcher/commit/9bc6b4b90e6245a6480a1b7e565e0c9b33ca282e))
+* Bump lodash from 4.17.20 to 4.17.21 ([97441a4](https://github.com/sth/stream-watcher/commit/97441a4984551e69e1931d3ef5d32652d7f337bc))
+* Add testing for node v16 ([61419ad](https://github.com/sth/stream-watcher/commit/61419ad6e854074bdd51f0eed9ab7ccb6a8c7b20))
+* Move changelog helpers to .chglog ([09b4723](https://github.com/sth/stream-watcher/commit/09b47230e56bcc6aa9d51f4c7f4ec2bbe3d353da))
 * Ignore unnecessary files in packaging ([9fd7d1e](https://github.com/sth/stream-watcher/commit/9fd7d1e3e913f39566197bb4078dab03b7d0a121))
 * Use actions v2 ([f2720e6](https://github.com/sth/stream-watcher/commit/f2720e6ef57e079975512c64f24d2f16ae784603))
 * Add testing for pull requests ([00644d5](https://github.com/sth/stream-watcher/commit/00644d575046e128f17594adf4478a098465dbb1))
